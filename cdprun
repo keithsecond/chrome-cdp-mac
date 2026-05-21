@@ -6,8 +6,15 @@ if [[ -z $(netstat -an -p tcp | awk '$4 ~ /.6000$/ && $6 == "LISTEN"') ]]; then
 fi
 
 # Wifi and ethernet bouncing. This may be wildly different for your network.
-INT=$(if ifconfig en6 >/dev/null 2>&1; then echo "en6"; else echo "en0"; fi)
+INT=$(route -n get default 2>/dev/null | awk '/interface:/ {print $2}')
 IP=$(ifconfig $INT 2>/dev/null | grep inet | awk '$1=="inet" {print $2}')
+
+if [ -z "$IP" ]; then
+  echo "Could not determine host IP" >&2
+  exit 1
+fi
+
+echo "Using $INT -> $IP"
 
 docker run -d \
   --name chrome-cdp \
