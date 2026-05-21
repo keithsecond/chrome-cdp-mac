@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+if [[ -z $(netstat -an -p tcp | awk '$4 ~ /.6000$/ && $6 == "LISTEN"') ]]; then 
+    echo 'XQuartz not running. run "open -a XQuartz", allow your IP with "xhost +$IP" and try again'
+    exit 1
+fi
+
+# Wifi and ethernet bouncing. This may be wildly different for your network.
+INT=$(if ifconfig en6 >/dev/null 2>&1; then echo "en6"; else echo "en0"; fi)
+IP=$(ifconfig $INT 2>/dev/null | grep inet | awk '$1=="inet" {print $2}')
+
+docker run -d \
+  --name chrome-cdp \
+  -p 127.0.0.1:9222:9222 \
+  -e DISPLAY=$IP:0 \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v "$HOME/chrome-cdp-profile:/data" \
+  --security-opt seccomp=$HOME/chrome.json \
+  --shm-size=2g \
+  chrome-cdp:local
