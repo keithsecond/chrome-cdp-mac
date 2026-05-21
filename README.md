@@ -10,7 +10,7 @@ for running Playwright/CDP tests against a real Chrome instance on macOS
 - `start-chrome.sh` — Chrome launch command (runs inside the container under supervisord)
 - `supervisord.conf` — runs Chrome + socat (bridges 9222 → 127.0.0.1:9223)
 - `local.conf` — fontconfig
-- `seccomp/chrome.json` — seccomp profile from jfrazelle/dotfiles, added statx, openat2, clone3
+- `seccomp/chrome.json` — seccomp profile from jfrazelle/dotfiles with added statx, openat2, clone3
 - `cdprun` — convenience script to launch the container with the right host env
 
 ## Prerequisites (macOS)
@@ -34,4 +34,4 @@ for running Playwright/CDP tests against a real Chrome instance on macOS
 
 ## Credits 
 
-    [Jess Frazelle](https://github.com/jessfraz)
+[Jess Frazelle](https://github.com/jessfraz) for [jess/chrome](https://github.com/jessfraz/dockerfiles/tree/master/chrome)
