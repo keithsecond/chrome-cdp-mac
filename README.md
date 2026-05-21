@@ -1,4 +1,4 @@
-# chrome-cdp-mac
+# headed-chrome-cdp-mac
 
 Headed Chrome in a Docker container with CDP exposed on port 9222, intended
 for running Playwright/CDP tests against a real Chrome instance on macOS
@@ -26,6 +26,7 @@ for running Playwright/CDP tests against a real Chrome instance on macOS
 ## Run
 
     cp seccomp/chrome.json ~/chrome.json
+    mkdir ~/chrome-cdp-profile
     ./cdprun
 
 ## Verify
