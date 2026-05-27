@@ -1,5 +1,18 @@
 #!/bin/zsh
 
+# Ensure seccomp profile is staged
+if [ ! -f "$HOME/chrome.json" ]; then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    if [ -f "$SCRIPT_DIR/seccomp/chrome.json" ]; then
+        echo "Staging seccomp profile to ~/chrome.json"
+        cp "$SCRIPT_DIR/seccomp/chrome.json" "$HOME/chrome.json"
+    else
+        echo "Error: seccomp/chrome.json not found" >&2
+        exit 1
+    fi
+fi
+
+# XQuartz check
 if [[ -z $(netstat -an -p tcp | awk '$4 ~ /.6000$/ && $6 == "LISTEN"') ]]; then 
     echo 'XQuartz not running. run "open -a XQuartz", allow your IP with "xhost +$IP" and try again'
     exit 1
@@ -13,6 +26,9 @@ if [ -z "$IP" ]; then
   echo "Could not determine host IP" >&2
   exit 1
 fi
+
+#xhost assignment
+xhost +127.0.0.1 $IP
 
 echo "Using $INT -> $IP"
 
