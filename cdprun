@@ -13,10 +13,12 @@ if [ ! -f "$HOME/chrome.json" ]; then
 fi
 
 # XQuartz check
-if [[ -z $(netstat -an -p tcp | awk '$4 ~ /.6000$/ && $6 == "LISTEN"') ]]; then 
+XQUARTZ_LINE=$(netstat -an -p tcp | awk '$4 ~ /.600[0-3]$/ && $6 == "LISTEN" {print; exit}')
+if [[ -z "$XQUARTZ_LINE" ]]; then
     echo 'XQuartz not running. run "open -a XQuartz", allow your IP with "xhost +$IP" and try again'
     exit 1
 fi
+DP=$(echo "$XQUARTZ_LINE" | awk '{sub(/.*\.600/, "", $4); print $4}')
 
 # Wifi and ethernet bouncing. This may be wildly different for your network.
 INT=$(route -n get default 2>/dev/null | awk '/interface:/ {print $2}')
@@ -31,11 +33,12 @@ fi
 xhost +127.0.0.1 $IP
 
 echo "Using $INT -> $IP"
+echo "Using display :$DP"
 
 docker run -d \
   --name chrome-cdp \
   -p 127.0.0.1:9222:9222 \
-  -e DISPLAY=$IP:0 \
+  -e DISPLAY=$IP:$DP \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v "$HOME/chrome-cdp-profile:/data" \
   --security-opt seccomp=$HOME/chrome.json \
