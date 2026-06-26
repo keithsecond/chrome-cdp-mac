@@ -3,7 +3,7 @@
 # Cleanup stale profile from old containers
 rm -f /data/SingletonLock /data/SingletonCookie /data/SingletonSocket
 
-exec google-chrome \
+exec chromium \
   --user-data-dir=/data/ \
   --remote-debugging-port=9223 \
   --remote-debugging-address=0.0.0.0 \
