@@ -1,6 +1,6 @@
 # headed-chrome-cdp-mac
 
-Headed Chrome in a Docker container for Github Actions CI checkout. CDP exposed on port 9222, intended
+Headed Chrome in a Docker container for Github Actions CI. CDP exposed on port 9222, intended
 for running Playwright/CDP tests against a real Chrome instance on macOS
 (via XQuartz for the display).
 
